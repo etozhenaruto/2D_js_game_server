@@ -1,10 +1,14 @@
-const ACTIONS = require("../../actions")
-const ERRORS = require("../errors")
+import Room from "../Enties/Room";
+import RoomList from "../Enties/RoomList";
+
+import { ACTIONS } from "../../actions"
+import { ERRORS } from "../errors"
+import { Server } from "socket.io";
 
 class RoomListWS {
-    io
-    room_list_insance
-    constructor(io, room_list_insance) {
+    io: Server;
+    room_list_insance: RoomList
+    constructor(io: Server, room_list_insance: RoomList) {
         this.io = io
         this.room_list_insance = room_list_insance
     }
@@ -13,7 +17,7 @@ class RoomListWS {
         this.io.emit(ACTIONS.SHARE_ROOMS, { rooms: this.room_list_insance.rooms })
     }
 
-    emitUpdateRoomByID(roomID) {
+    emitUpdateRoomByID(roomID: string) {
         const currentRoom = this.room_list_insance.getRoomByID(roomID)
         currentRoom.users.forEach(userID => {
             this.io.to(userID).emit(ACTIONS.UPDATE_ROOM, currentRoom);
@@ -76,4 +80,4 @@ class RoomListWS {
     }
 }
 
-module.exports = RoomListWS
+export default RoomListWS

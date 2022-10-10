@@ -1,4 +1,7 @@
-const ACTIONS = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ACTIONS = void 0;
+exports.ACTIONS = {
     CREATE_ROOM: 'create-room',
     JOIN_ROOM: 'join-room',
     UPDATE_ROOM: 'update-room',
@@ -6,5 +9,4 @@ const ACTIONS = {
     SHARE_ROOMS: 'share-rooms',
     ERROR_ROOM: 'error-room'
 };
-module.exports = ACTIONS;
 //# sourceMappingURL=actions.js.map

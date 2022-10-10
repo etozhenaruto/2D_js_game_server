@@ -1,11 +1,14 @@
-const path = require('path');
-const express = require('express');
-const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io'
 
-const RoomList = require('./src/Enties/RoomList');
-const RoomListWS = require('./src/webscket/RoomWS')
+import RoomList from './src/Enties/RoomList';
+import RoomListWS from './src/webscket/RoomWS';
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
 const PORT = process.env.PORT || 3001;
 
 //СОЗДАНИЕ СИНГОЛТОНОВ
@@ -18,18 +21,6 @@ io.on('connection', socket => {
     room_list_WS.watch(socket)
 });
 
-
-
-const publicPath = path.join(__dirname, 'build');
-
-app.use(express.static(publicPath));
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(publicPath, 'index.html'));
-});
-
 server.listen(PORT, () => {
     console.log('Server Started!')
 })
-
-module.exports = io
