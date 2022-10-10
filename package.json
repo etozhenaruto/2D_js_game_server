@@ -1,0 +1,27 @@
+{
+  "name": "2d_js_game_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "npx nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vadimqq/2D_js_game_server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vadimqq/2D_js_game_server/issues"
+  },
+  "homepage": "https://github.com/vadimqq/2D_js_game_server#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.5.2",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
