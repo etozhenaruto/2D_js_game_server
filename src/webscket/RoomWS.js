@@ -47,14 +47,15 @@ class RoomListWS {
 
         socket.on(ACTIONS.LEAVE, ({ roomID }) => {
             const currentRoom = this.room_list_insance.getRoomByID(roomID)
-            currentRoom.deleteUserByID(socket.id)
-            socket.leave(roomID);
-            this.emitUpdateRoomByID(roomID)
+            if (currentRoom) {
+                currentRoom.deleteUserByID(socket.id)
+                socket.leave(roomID);
+                this.emitUpdateRoomByID(roomID)
 
-            if (!Boolean(currentRoom.users.length)) {
-                this.room_list_insance.deleteRoomByID(roomID)
+                if (!Boolean(currentRoom.users.length)) {
+                    this.room_list_insance.deleteRoomByID(roomID)
+                }
             }
-
             this.emitUpdateRooms()
         });
 

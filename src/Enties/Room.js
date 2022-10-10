@@ -1,6 +1,8 @@
 class Room {
     id
     users = []
+    characterList = [{ name: 'vaday', HP: 100, damage: 10 }, { name: 'bogdan', HP: 100, damage: 10 }, { name: 'ILJAAA', HP: 100, damage: 10 }]
+    selectedCharaterNameList = []
     constructor(id) {
         this.id = id
     }
