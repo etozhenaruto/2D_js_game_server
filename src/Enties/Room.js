@@ -1,13 +1,8 @@
 class Room {
-    socket
-    io
-
     id
     users = []
-    constructor(id, socket, io) {
+    constructor(id) {
         this.id = id
-        this.socket = socket
-        this.io = io
     }
 
     addNewUser(userID) {

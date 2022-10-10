@@ -17,59 +17,37 @@ io.on('connection', socket => {
     room_list.updateRoomList()
 
     //СОЗДАНИЕ КОМНАТЫ
-    socket.on(ACTIONS.CREATE_ROOM, ({ roomID, userID }) => {
-        room_list.createNewRoom(roomID, userID)
+    socket.on(ACTIONS.CREATE_ROOM, ({ roomID }) => {
+        room_list.createNewRoom(roomID)
         socket.join(roomID)
     })
     //---------------
 
-    // //ДОБАВЛЕНИЕ ПОЗЛЬЗОВАТЕЛЯ В КОМНАТУ
-    // socket.on(ACTIONS.JOIN_ROOM, ({ roomID }) => {
-    //     const RoomClients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+    //ДОБАВЛЕНИЕ ПОЗЛЬЗОВАТЕЛЯ В КОМНАТУ
+    socket.on(ACTIONS.JOIN_ROOM, ({ roomID }) => {
+        const currentRoom = room_list.getRoomByID(roomID)
+        currentRoom.addNewUser(socket.id)
+        socket.join(roomID);
+        room_list.updateroomByID(roomID)
+    })
+    //---------------------------------
 
-    //     //добавляем пользователя в команту и обновляем список всех комнат
-    //     socket.join(roomID);
-
-    //     updateRoomByID(roomID)
-    // })
-    // //---------------------------------
-
-    // //ВЫХОД ПОЛЬЗОВАТЕЛЯ
-    // function leaveRoom({ roomID, userID }) {
-    //     socket.leave(roomID);
-    //     updateRoomByID(roomID)
-    // }
-    // //--------------------------------
-
-    // // function leaveRoom({roomID, userID}) {
-    // //     const { rooms } = socket;
-
-    // //     Array.from(rooms)
-    // //         // LEAVE ONLY CLIENT CREATED ROOM
-    // //         .filter(roomID => validate(roomID) && version(roomID) === 4)
-    // //         .forEach(roomID => {
-
-    // //             const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
-
-    // //             clients
-    // //                 .forEach(clientID => {
-    // //                     io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
-    // //                         peerID: socket.id,
-    // //                     });
-
-    // //                     socket.emit(ACTIONS.REMOVE_PEER, {
-    // //                         peerID: clientID,
-    // //                     });
-    // //                 });
-
-    // //             socket.leave(roomID);
-    // //         });
-
-    // //     shareRoomsInfo();
-    // // }
-
-    // socket.on(ACTIONS.LEAVE, leaveRoom);
-    // socket.on('disconnecting', leaveRoom);
+    socket.on(ACTIONS.LEAVE, ({ roomID }) => {
+        const currentRoom = room_list.getRoomByID(roomID)
+        currentRoom.deleteUserByID(socket.id)
+        socket.leave(roomID);
+        room_list.updateroomByID(roomID)
+        room_list.updateRoomList()
+    });
+    socket.on('disconnecting', (data) => {
+        const room = room_list.getRoomByUserID(socket.id)
+        if (room) {
+            room.deleteUserByID(socket.id)
+            socket.leave(room.id);
+            room_list.updateroomByID(room.id)
+            room_list.updateRoomList()
+        }
+    });
 
     // socket.on(ACTIONS.RELAY_SDP, ({ peerID, sessionDescription }) => {
     //     io.to(peerID).emit(ACTIONS.SESSION_DESCRIPTION, {
@@ -98,3 +76,5 @@ app.get('*', (req, res) => {
 server.listen(PORT, () => {
     console.log('Server Started!')
 })
+
+module.exports = io

@@ -9,12 +9,15 @@ class RoomList {
         this.io = io
     }
 
-    createNewRoom(roomID, userID) {
+    createNewRoom(roomID) {
         const newRoom = new Room(roomID)
 
-        newRoom.addNewUser(userID)
         this.rooms.push(newRoom)
         this.updateRoomList()
+    }
+
+    getRoomByID(roomID) {
+        return this.rooms.find(({ id }) => id === roomID)
     }
 
     deleteRoomByID(roomID) {
@@ -23,6 +26,19 @@ class RoomList {
 
     updateRoomList() {
         this.io.emit(ACTIONS.SHARE_ROOMS, { rooms: this.rooms })
+    }
+
+    updateroomByID(roomID) {
+        const currentRoom = this.getRoomByID(roomID)
+        currentRoom.users.forEach(userID => {
+            this.io.to(userID).emit(ACTIONS.UPDATE_ROOM, currentRoom);
+        })
+    }
+
+    getRoomByUserID(userID) {
+        return this.rooms.find((room) => {
+            return room.users.find((id) => id === userID)
+        })
     }
 
 
