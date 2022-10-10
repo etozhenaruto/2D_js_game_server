@@ -2,7 +2,6 @@ const ACTIONS = require("../../actions")
 const Room = require("./Room")
 
 class RoomList {
-    socket
     io
 
     rooms = []
@@ -23,7 +22,7 @@ class RoomList {
     }
 
     updateRoomList() {
-        this.io.emit(ACTIONS.SHARE_ROOMS, this.rooms)
+        this.io.emit(ACTIONS.SHARE_ROOMS, { rooms: this.rooms })
     }
 
 
