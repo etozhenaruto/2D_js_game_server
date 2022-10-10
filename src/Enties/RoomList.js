@@ -2,18 +2,11 @@ const ACTIONS = require("../../actions")
 const Room = require("./Room")
 
 class RoomList {
-    io
-
     rooms = []
-    constructor(io) {
-        this.io = io
-    }
 
     createNewRoom(roomID) {
         const newRoom = new Room(roomID)
-
         this.rooms.push(newRoom)
-        this.updateRoomList()
     }
 
     getRoomByID(roomID) {
@@ -21,18 +14,7 @@ class RoomList {
     }
 
     deleteRoomByID(roomID) {
-        this.rooms = this.users.filter((id) => id !== roomID)
-    }
-
-    updateRoomList() {
-        this.io.emit(ACTIONS.SHARE_ROOMS, { rooms: this.rooms })
-    }
-
-    updateroomByID(roomID) {
-        const currentRoom = this.getRoomByID(roomID)
-        currentRoom.users.forEach(userID => {
-            this.io.to(userID).emit(ACTIONS.UPDATE_ROOM, currentRoom);
-        })
+        this.rooms = this.rooms.filter(({ id }) => id !== roomID)
     }
 
     getRoomByUserID(userID) {
@@ -40,11 +22,6 @@ class RoomList {
             return room.users.find((id) => id === userID)
         })
     }
-
-
-
-    //SOCKET LOGIC
-
 
 }
 
